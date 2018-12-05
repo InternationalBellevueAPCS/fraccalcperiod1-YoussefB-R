@@ -35,29 +35,42 @@ public class FracCalc {
     //               Example "4/5 * 1_2/4" returns "1_1/5".
     public static String produceAnswer(String input)
     {  
-    	String takeOutFirstOperand = input.substring(input.indexOf("/") + 1, input.length());
+    	String takeOutFirstChar = input.substring(1, input.length());
     	String operator;
-    	if(takeOutFirstOperand.indexOf("+") != -1) {
+    	if(takeOutFirstChar.indexOf("+") != -1) {
     		operator = "+";
-    	} else if(takeOutFirstOperand.indexOf("-") != -1) {
+    	} else if(takeOutFirstChar.indexOf("-") != -1) {
     		operator = "-";
-    	} else if(takeOutFirstOperand.indexOf("*") != -1) {
+    	} else if(takeOutFirstChar.indexOf("*") != -1) {
     		operator = "*";
     	} else {
     		operator = "/";
     	}
-    	if(operator.equals("*") || operator.equals("+") || operator.equals("-")) {
-    		String operand1 = input.substring(0, input.indexOf(operator) - 2);
-    		String operand2 = input.substring(input.indexOf(operator) + 2, input.length());
-    		return(operand2);
-    	}	else {
+    	String operand2;
+    	String operand1;
+    	
+    	if(operator.equals("*") || operator.equals("+")) {
+    		operand1 = input.substring(0, input.indexOf(operator) - 2);
+    		operand2 = input.substring(input.indexOf(operator) + 2, input.length());
+    		
+    	}	else if (operator.equals("/")){
     		int firstDivisionLocation = input.indexOf("/");
     		int secondDivisionLocation = input.substring(firstDivisionLocation + 1, input.length()).indexOf("/");
     		int operatorLocation = firstDivisionLocation + secondDivisionLocation + 1;
-    		String operand1 = input.substring(0 , operatorLocation - 2);
-    		String operand2 = input.substring(operatorLocation + 2, input.length());
-    		return(operand2);
+    		operand1 = input.substring(0 , operatorLocation - 2);
+    		operand2 = input.substring(operatorLocation + 2, input.length());
+    	} else {
+    		if(input.charAt(0) == '-') {
+    			int secondSubtractionLocation = input.substring(1, input.length()).indexOf("-");
+        		int operatorLocation = secondSubtractionLocation + 1;
+        		operand1 = input.substring(0 , operatorLocation - 2);
+        		operand2 = input.substring(operatorLocation + 2, input.length());
+    		} else {
+    			operand1 = input.substring(0, input.indexOf(operator) - 2);
+        		operand2 = input.substring(input.indexOf(operator) + 2, input.length());
+    		}
     	}
+    	return(operand2);
     }
 
     // TODO: Fill in the space below with helper methods
