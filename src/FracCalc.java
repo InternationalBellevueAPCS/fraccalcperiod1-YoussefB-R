@@ -46,9 +46,18 @@ public class FracCalc {
     	} else {
     		operator = "/";
     	}
-    	String operand1 = input.substring(0, input.indexOf(operator) - 2);
-    	String operand2 = input.substring(input.indexOf(operator) + 2, input.length());
-    	return(operand2);
+    	if(operator.equals("*") || operator.equals("+") || operator.equals("-")) {
+    		String operand1 = input.substring(0, input.indexOf(operator) - 2);
+    		String operand2 = input.substring(input.indexOf(operator) + 2, input.length());
+    		return(operand2);
+    	}	else {
+    		int firstDivisionLocation = input.indexOf("/");
+    		int secondDivisionLocation = input.substring(firstDivisionLocation + 1, input.length()).indexOf("/");
+    		int operatorLocation = firstDivisionLocation + secondDivisionLocation + 1;
+    		String operand1 = input.substring(0 , operatorLocation - 2);
+    		String operand2 = input.substring(operatorLocation + 2, input.length());
+    		return(operand2);
+    	}
     }
 
     // TODO: Fill in the space below with helper methods
