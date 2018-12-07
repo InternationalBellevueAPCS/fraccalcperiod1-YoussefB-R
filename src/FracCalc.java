@@ -11,10 +11,12 @@ public class FracCalc {
     // Checkpoint 2: Accept user input multiple times.
     public static void main(String[] args)
     {
-        Scanner scan = new Scanner(System.in);
-        String input = scan.nextLine();
-        //System.out.println(input.substring(input.indexOf("/") + 1, input.length()));
-        System.out.println(produceAnswer(input));
+    	Scanner scan = new Scanner(System.in);
+    	String input = scan.nextLine();
+    	while(!input.equalsIgnoreCase("quit")) {
+        	System.out.println(produceAnswer(input));
+        	input = scan.nextLine();
+    	}	
     }
     
     /**
@@ -51,7 +53,48 @@ public class FracCalc {
     	// Looks for a space then the operator, then uses that to find the two operands.
     	String operand1 = input.substring(0, input.indexOf(" " + operator) - 1);
     	String operand2 = input.substring(input.indexOf(" " + operator) + 3, input.length());
-    	return(operand2);
+    	// Checks for whole numbers and sets whole for operand1.
+    	String whole1;
+    	if(operand1.indexOf("_") != -1) {
+    		whole1 = operand1.substring(0, operand1.indexOf("_"));
+    	} else {
+    		whole1 = "0";
+    	}
+    	// Checks for fraction and sets numerator and denominator. Also sets whole if no fraction is found for operand1.
+    	String num1 = "0";
+    	String denom1 = "1";
+    	if(operand1.indexOf("/") != -1) {
+    		if(operand1.indexOf("_") != -1) {
+    			num1 = operand1.substring(operand1.indexOf("_") + 1, operand1.indexOf("/"));
+    		} else {
+    			num1 = operand1.substring(0, operand1.indexOf("/"));
+    		}
+    		denom1 = operand1.substring(operand1.indexOf("/") + 1, operand1.length());
+    	} else {
+    		whole1 = operand1;
+    	}
+    	// Checks for whole numbers and sets whole for operand2.
+    	String whole2;
+    	if(operand2.indexOf("_") != -1) {
+    		whole2 = operand2.substring(0, operand2.indexOf("_"));
+    	} else {
+    		whole2 = "0";
+    	}
+    	// Checks for fraction and sets numerator and denominator. Also sets whole if no fraction is found for operand2.
+    	String num2 = "0";
+    	String denom2 = "1";
+    	if(operand2.indexOf("/") != -1) {
+    		if(operand2.indexOf("_") != -1) {
+    			num2 = operand2.substring(operand2.indexOf("_") + 1, operand2.indexOf("/"));
+    		} else {
+    			num2 = operand2.substring(0, operand2.indexOf("/"));
+    		}
+    		denom2 = operand2.substring(operand2.indexOf("/") + 1, operand2.length());
+    	} else {
+    		whole2 = operand2;
+    	}
+    	String parseInput = "whole:" + whole2 + " numerator:" + num2 + " denominator:" + denom2;
+    	return(parseInput);
     }
 
     // TODO: Fill in the space below with helper methods
