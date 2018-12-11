@@ -16,7 +16,8 @@ public class FracCalc {
     	while(!input.equalsIgnoreCase("quit")) {
         	System.out.println(produceAnswer(input));
         	input = scan.nextLine();
-    	}	
+    	}
+    		
     }
     
     /**
@@ -37,21 +38,24 @@ public class FracCalc {
     //               Example "4/5 * 1_2/4" returns "1_1/5".
     public static String produceAnswer(String input)
     {  
+    	
     	// I take out the first character in case it is a negative.
     	String takeOutFirstChar = input.substring(1, input.length());
     	String operator;
     	// Checks to see what the operator is
     	if(takeOutFirstChar.indexOf(" +") != -1) {
     		operator = "+";
-    	} else if(takeOutFirstChar.indexOf(" -") != -1) {
-    		operator = "-";
     	} else if(takeOutFirstChar.indexOf(" *") != -1) {
     		operator = "*";
+    	} else if(takeOutFirstChar.indexOf("/ -") != -1) {
+    		operator = "/";
+    	} else if(takeOutFirstChar.indexOf(" -") != -1) {
+    		operator = "-";
     	} else {
     		operator = "/";
     	}
     	// Looks for a space then the operator, then uses that to find the two operands.
-    	String operand1 = input.substring(0, input.indexOf(" " + operator) - 1);
+    	String operand1 = input.substring(0, input.indexOf(" " + operator));
     	String operand2 = input.substring(input.indexOf(" " + operator) + 3, input.length());
     	// Checks for whole numbers and sets whole for operand1.
     	String whole1;
@@ -93,12 +97,164 @@ public class FracCalc {
     	} else {
     		whole2 = operand2;
     	}
-    	String parseInput = "whole:" + whole2 + " numerator:" + num2 + " denominator:" + denom2;
-    	return(parseInput);
+    	String parseInput = "whole:" + whole1 + " numerator:" + num1 + " denominator:" + denom1;
+    	int whole1i = Integer.parseInt(whole1);
+    	int whole2i = Integer.parseInt(whole2);
+    	int num1i = Integer.parseInt(num1);
+    	int num2i = Integer.parseInt(num2);
+    	int denom1i = Integer.parseInt(denom1);
+    	int denom2i = Integer.parseInt(denom2);
+    	String finalAnswer = "";
+    	if(operator.equals("*")) {
+    		finalAnswer = multiplication(whole1i, num1i, denom1i, whole2i, num2i, denom2i);
+    	} else if(operator.equals("/")) {
+    		finalAnswer = division(whole1i, num1i, denom1i, whole2i, num2i, denom2i);
+    	} else if(operator.equals("+")) {
+    		finalAnswer = addition(whole1i, num1i, denom1i, whole2i, num2i, denom2i);
+    	} else {
+    		finalAnswer = subtraction(whole1i, num1i, denom1i, whole2i, num2i, denom2i);
+    	}
+    	return(finalAnswer);
     }
 
     // TODO: Fill in the space below with helper methods
     
+    public static String addition(int whole1, int num1, int denom1, int whole2, int num2, int denom2) 
+    {
+    	int totalNum;
+    	int wholeToNum1 = 0;
+    	int wholeToNum2 = 0;
+    	if(whole1 != 0) {
+    		wholeToNum1 = whole1 * denom1;
+    	} 
+    	if(whole2 != 0) {
+    		wholeToNum2 = whole2 * denom2;
+    	}
+    	if(whole1 < 0) {
+    		num1 = -num1;
+    	}
+    	if(whole2 < 0) {
+    		num2 = -num2;
+    	}
+    	num1+=wholeToNum1;
+    	num2+=wholeToNum2;
+    	int lcm = leastCommonMultiple(denom1, denom2);
+    	num1 = num1 * (lcm/denom1);
+    	num2 = num2 * (lcm/denom2);
+    	totalNum = num1 + num2;
+    	String answer = totalNum + "/" + lcm;
+		return(answer);
+    }
+    public static String subtraction(int whole1, int num1, int denom1, int whole2, int num2, int denom2) 
+    {
+    	int totalNum;
+    	int wholeToNum1 = 0;
+    	int wholeToNum2 = 0;
+    	if(whole1 != 0) {
+    		wholeToNum1 = whole1 * denom1;
+    	} 
+    	if(whole2 != 0) {
+    		wholeToNum2 = whole2 * denom2;
+    	}
+    	if(whole1 < 0) {
+    		num1 = -num1;
+    	}
+    	if(whole2 < 0) {
+    		num2 = -num2;
+    	}
+    	num1+=wholeToNum1;
+    	num2+=wholeToNum2;
+    	int lcm = leastCommonMultiple(denom1, denom2);
+    	num1 = num1 * (lcm/denom1);
+    	num2 = num2 * (lcm/denom2);
+    	totalNum = num1 - num2;
+    	String answer = totalNum + "/" + lcm;
+		return(answer);
+    }
+    public static String division(int whole1, int num1, int denom1, int whole2, int num2, int denom2)
+    {
+
+    	int totalNum;
+    	int totalDenom;
+    	int wholeToNum1 = 0;
+    	int wholeToNum2 = 0;
+    	boolean o1IsZero = false;
+    	if(whole1 == 0 && num1 == 0) {
+    		o1IsZero = true;
+    	}
+    	if(whole1 != 0) {
+    		wholeToNum1 = whole1 * denom1;
+    	} 
+    	if(whole2 != 0) {
+    		wholeToNum2 = whole2 * denom2;
+    	}
+    	if(whole1 < 0) {
+    		num1 = -num1;
+    	}
+    	if(whole2 < 0) {
+    		num2 = -num2;
+    	}
+    	num1+=wholeToNum1;
+    	num2+=wholeToNum2;
+    	int placeholder = denom2;
+    	denom2 = num2;
+    	num2 = placeholder;
+    	if(num1 != 0 && num2 != 0) {
+    		totalNum = num1 * num2;
+    	} else {
+    		if(num1 == 0) {
+    			totalNum = num2;
+    		} else{
+    			totalNum = num1;
+    		}
+    	}
+    	totalDenom = denom1 * denom2;
+    	String answer = totalNum + "/" + totalDenom;
+    	if(o1IsZero == true) {
+    		answer = "0";
+    	}
+		return(answer);
+    }	
+    public static String multiplication(int whole1, int num1, int denom1, int whole2, int num2, int denom2)
+    {
+    	int totalNum;
+    	int wholeToNum1 = 0;
+    	int wholeToNum2 = 0;
+    	int totalDenom;
+    	boolean oIsZero = false;
+    	if((whole1 == 0 && num1 == 0) || (whole2 == 0 && num2 == 0)) {
+    		oIsZero = true;
+    	}
+       	if(whole1 != 0) {
+    		wholeToNum1 = whole1 * denom1;
+    	} 
+    	if(whole2 != 0) {
+    		wholeToNum2 = whole2 * denom2;
+    	}
+    	if(whole1 < 0) {
+    		num1 = -num1;
+    	}
+    	if(whole2 < 0) {
+    		num2 = -num2;
+    	}
+    	num1+=wholeToNum1;
+    	num2+=wholeToNum2;
+    	if(num1 != 0 && num2 != 0) {
+    		totalNum = num1 * num2;
+    	} else {
+    		if(num1 == 0) {
+    			totalNum = num2;
+    		} else{
+    			totalNum = num1;
+    		}
+    	}
+    	totalDenom = denom1 * denom2;
+    	String answer = totalNum + "/" + totalDenom;
+    	if(oIsZero == true) {
+    		answer = "0";
+    	}
+		return(answer);
+    }
     /**
      * greatestCommonDivisor - Find the largest integer that evenly divides two integers.
      *      Use this helper method in the Final Checkpoint to reduce fractions.
